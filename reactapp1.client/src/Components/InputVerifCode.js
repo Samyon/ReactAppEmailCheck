@@ -2,7 +2,7 @@
 import { useTranslation } from 'react-i18next';
 import '../i18n';
 
-function EmailInput() {
+function InputVerifCode() {
     const [email, setEmail] = useState('');
     const [error, setError] = useState('');
 
@@ -24,7 +24,7 @@ function EmailInput() {
         }
     };
 
-    const handleSubmit = async () =>  {
+    const handleSubmit = async () => {
         try {
             const response = await fetch('/api/email', {
                 method: 'POST',
@@ -73,4 +73,4 @@ function EmailInput() {
     );
 }
 
-export default EmailInput;
+export default InputVerifCode;

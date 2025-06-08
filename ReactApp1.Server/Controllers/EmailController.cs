@@ -8,14 +8,18 @@ namespace ReactApp1.Server.Controllers
     public class EmailController : ControllerBase
     {
 
-        //[HttpPost]
-        //public async Task<IActionResult> PostEmail([FromBody] EmailEntry entry)
-        //{
-        //    if (!ModelState.IsValid) return BadRequest();
+        [HttpPost("api/email")]
+        public IActionResult ReceiveEmail([FromBody] EmailDto dto)
+        {
+            Console.WriteLine("Received email: " + dto.Email);
+            return Ok(new { status = "received" });
+        }
 
-        //    _db.Emails.Add(entry);
-        //    await _db.SaveChangesAsync();
-        //    return Ok(new { success = true });
-        //}
+        public class EmailDto
+        {
+            public string Email { get; set; }
+        }
+
+
     }
 }

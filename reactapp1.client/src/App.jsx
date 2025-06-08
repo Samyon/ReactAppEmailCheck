@@ -1,12 +1,18 @@
 import { useEffect, useState } from 'react';
 import './App.css';
 import EmailInput from './components/EmailInput';
+import { useTranslation } from 'react-i18next';
+import './i18n';
 
 function App() {
     const [forecasts, setForecasts] = useState();
     const [dbvalue, setDbvalue] = useState();
     const [text, setText] = useState(''); // состояние для ввода
 
+    const { t, i18n } = useTranslation();
+    const changeLanguage = (lng) => {
+        i18n.changeLanguage(lng);
+    };
 
     console.log('Текущее значение dbvalue:', dbvalue); // ← смотри в консоли браузера
     console.log('Текущее значение forecasts:', forecasts); // ← смотри в консоли браузера
@@ -53,34 +59,46 @@ function App() {
 
     return (
         <div>
+
+            <div style={{ padding: '2rem', fontFamily: 'sans-serif' }}>
+
+                <div style={{ marginTop: '1rem' }}>
+                    <button onClick={() => changeLanguage('ru')}>🇷🇺 Русский</button>
+                    <button onClick={() => changeLanguage('en')}>🇬🇧 English</button>
+                </div>
+            </div>
+            <h2>--------------</h2>
+            <EmailInput />
+            <h2>--------------</h2>
+            {/*<InputVerifCode />*/}
+            <h2>--------------</h2>
+            <div style={{ padding: '1rem', fontFamily: 'sans-serif' }}>
+
+
+
+                <h2>Введите текст:</h2>
+                <input
+                    type="text"
+                    value={text}
+                    onChange={handleChange}
+                    placeholder="Напиши что-нибудь..."
+                ></input>
+
+                <p>🔹 Вы ввели: <strong>{text}</strong></p>
+
+                Отладка
+                <pre>DEBUG: {JSON.stringify({ text }, null, 2)}</pre>
+            </div>
+
             <div>
+                <h1>Регистрация</h1>
+                <p>Введите адрес электронной почты</p>
 
-                <EmailInput />
+                <button>Подтвердить</button>
+                {contents}
+            </div>
 
-
-                <div style={{ padding: '1rem', fontFamily: 'sans-serif' }}>
-                    <h2>Введите текст:</h2>
-                    <input
-                        type="text"
-                        value={text}
-                        onChange={handleChange}
-                        placeholder="Напиши что-нибудь..."
-                    ></input>
-
-                    <p>🔹 Вы ввели: <strong>{text}</strong></p>
-
-                    Отладка
-                    <pre>DEBUG: {JSON.stringify({ text }, null, 2)}</pre>
-                </div>
-
-                <div>
-                    <h1>Регистрация</h1>
-                    <p>Введите адрес электронной почты</p>
-
-                    <button>Подтвердить</button>
-                    {contents}
-                </div>
-
+            <div>
                 <h1 id="tableLabel">Weather forecast</h1>
                 <p>This component demonstrates fetching data from the server.</p>
                 {contents}
