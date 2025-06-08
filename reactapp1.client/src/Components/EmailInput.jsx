@@ -2,7 +2,7 @@
 import { useTranslation } from 'react-i18next';
 import '../i18n';
 
-function EmailInput() {
+function EmailInput({ onEmailChange }) {
     const [email, setEmail] = useState('');
     const [error, setError] = useState('');
 
@@ -26,6 +26,9 @@ function EmailInput() {
 
     const handleSubmit = async () =>  {
         try {
+
+            onEmailChange(email); // передаём значение вверх
+
             const response = await fetch('/api/email', {
                 method: 'POST',
                 headers: {
@@ -43,7 +46,7 @@ function EmailInput() {
             alert(`${t('email')}: ${email}`);
         } catch (error) {
             console.error('Error submitting email:', error);
-            alert('Failed to submit email');
+            //alert('Failed to submit email');
         }
     };
 
@@ -51,7 +54,7 @@ function EmailInput() {
     return (
         <div style={{ padding: '1rem', fontFamily: 'sans-serif' }}>
 
-            <h1>{t('email address confirmation')}</h1>
+
 
             <h2>{t('Enter email')}</h2>
             <input

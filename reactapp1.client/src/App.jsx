@@ -1,8 +1,13 @@
 import { useEffect, useState } from 'react';
 import './App.css';
-import EmailInput from './components/EmailInput';
 import { useTranslation } from 'react-i18next';
 import './i18n';
+
+
+import MultiStepForm from './components/MultiStepForm';
+
+
+
 
 function App() {
     const [forecasts, setForecasts] = useState();
@@ -67,11 +72,12 @@ function App() {
                     <button onClick={() => changeLanguage('en')}>🇬🇧 English</button>
                 </div>
             </div>
+
             <h2>--------------</h2>
-            <EmailInput />
+            <h2>{t('email address confirmation')}</h2>
+            <MultiStepForm />
             <h2>--------------</h2>
-            {/*<InputVerifCode />*/}
-            <h2>--------------</h2>
+
             <div style={{ padding: '1rem', fontFamily: 'sans-serif' }}>
 
 

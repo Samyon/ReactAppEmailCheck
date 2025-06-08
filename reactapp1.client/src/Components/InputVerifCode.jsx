@@ -3,7 +3,7 @@ import { useTranslation } from 'react-i18next';
 import '../i18n';
 
 function InputVerifCode() {
-    const [email, setEmail] = useState('');
+    const [code, setCode] = useState('');
     const [error, setError] = useState('');
 
     const { t, i18n } = useTranslation();
@@ -11,7 +11,7 @@ function InputVerifCode() {
 
     const handleChange = (e) => {
         const value = e.target.value;
-        setEmail(value);
+        setCode(value);
 
         // Простая валидация email
         const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
@@ -51,14 +51,12 @@ function InputVerifCode() {
     return (
         <div style={{ padding: '1rem', fontFamily: 'sans-serif' }}>
 
-            <h1>{t('email address confirmation')}</h1>
-
-            <h2>{t('Enter email')}</h2>
+            <h2>{t('Enter verification code')}</h2>
             <input
-                type="email"
-                value={email}
+                type="text"
+                value={code}
                 onChange={handleChange}
-                placeholder="example@email.com"
+                placeholder="code"
                 style={{ padding: '0.5rem', fontSize: '1rem' }}
             />
             <button onClick={handleSubmit}>{t('submit')}</button>
@@ -66,7 +64,7 @@ function InputVerifCode() {
                 {error ? (
                     <span style={{ color: 'red' }}>{error}</span>
                 ) : (
-                    email && <span>📧 Введённый email: {email}</span>
+                        code && <span>📧 Введённый код: {email}</span>
                 )}
             </div>
         </div>
