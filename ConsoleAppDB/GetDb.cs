@@ -23,6 +23,11 @@ namespace Db
             return "test";
         }
 
+        /// <summary>
+        /// Warning! SQL Injection possible
+        /// </summary>
+        /// <param name="commandText"></param>
+        /// <returns></returns>
         public static async Task ExecuteNonQueryAsync(string commandText)
         {
             using var connection = new SqliteConnection(connectionString);
@@ -36,7 +41,18 @@ namespace Db
             //return "Ok";
         }
 
-
+        public static async Task ExecuteNonQueryAsyncW(string commandText)
+        {
+            using var connection = new SqliteConnection(connectionString);
+            {
+                await connection.OpenAsync();
+                var insertCmd = connection.CreateCommand();
+                insertCmd.CommandText = commandText;
+                await insertCmd.ExecuteNonQueryAsync();
+            }
+            Console.WriteLine("Данные успешно добавлены в SQLite.");
+            //return "Ok";
+        }
 
         public static async Task<SqliteDataReader?> GetDataReaderAsync(string commandText)
         {
