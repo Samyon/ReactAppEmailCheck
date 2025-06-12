@@ -29,13 +29,22 @@ function EmailInput({ onEmailChange }) {
 
             onEmailChange(email); // передаём значение вверх
 
+            const payload = {
+                email:  email ,
+                ip_client: "12.34.45.78",
+                session: "30"
+            };
+            console.log(payload);
+
             const response = await fetch('/api/email', {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json'
                 },
-                body: JSON.stringify({ email })
+                body: JSON.stringify(payload)
             });
+
+
 
             if (!response.ok) {
                 throw new Error('Network response was not ok');

@@ -15,14 +15,19 @@
   </ItemGroup>
 
   <ItemGroup>
-    <Folder Include="TempScr\" />
-  </ItemGroup>
-
-  <ItemGroup>
     <None Update="Migration\*.sql">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>   
 
+  </ItemGroup>
+
+  <ItemGroup>
+    <None Update="TempScr\2025_06_10_00_CreateTabeSettings.sql">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Update="TempScr\2025_06_10_01_SeedTabeSettings.sql">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
   </ItemGroup>
 
 </Project>

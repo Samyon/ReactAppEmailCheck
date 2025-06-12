@@ -14,6 +14,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DB", "ConsoleAppDB\DB.cspro
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DBMigrator", "ConsoleAppDBMigrator\DBMigrator.csproj", "{2530670D-4F67-41F9-8515-A93906E53410}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "EmailSenderConsole", "EmailSenderConsole\EmailSenderConsole.csproj", "{0E675D75-46A6-4C76-A22B-99874A48C919}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -38,6 +40,10 @@ Global
 		{2530670D-4F67-41F9-8515-A93906E53410}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{2530670D-4F67-41F9-8515-A93906E53410}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{2530670D-4F67-41F9-8515-A93906E53410}.Release|Any CPU.Build.0 = Release|Any CPU
+		{0E675D75-46A6-4C76-A22B-99874A48C919}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{0E675D75-46A6-4C76-A22B-99874A48C919}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{0E675D75-46A6-4C76-A22B-99874A48C919}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{0E675D75-46A6-4C76-A22B-99874A48C919}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

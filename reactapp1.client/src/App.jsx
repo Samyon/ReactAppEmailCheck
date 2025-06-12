@@ -12,28 +12,18 @@ import MultiStepForm from './components/MultiStepForm';
 function App() {
     const [forecasts, setForecasts] = useState();
     const [dbvalue, setDbvalue] = useState();
-    const [text, setText] = useState(''); // состояние для ввода
 
+    //Localosation
     const { t, i18n } = useTranslation();
     const changeLanguage = (lng) => {
         i18n.changeLanguage(lng);
     };
 
-    console.log('Текущее значение dbvalue:', dbvalue); // ← смотри в консоли браузера
-    console.log('Текущее значение forecasts:', forecasts); // ← смотри в консоли браузера
-
-
     useEffect(() => {
         populateWeatherData();
-    }, []);
-
-    useEffect(() => {
         getDbData();
     }, []);
 
-    const handleChange = (event) => {
-        setText(event.target.value); // обновляем состояние при изменении
-    };
 
     const contents = forecasts === undefined
         ? <p><em>Loading....</em></p>
@@ -78,31 +68,7 @@ function App() {
             <MultiStepForm />
             <h2>--------------</h2>
 
-            <div style={{ padding: '1rem', fontFamily: 'sans-serif' }}>
-
-
-
-                <h2>Введите текст:</h2>
-                <input
-                    type="text"
-                    value={text}
-                    onChange={handleChange}
-                    placeholder="Напиши что-нибудь..."
-                ></input>
-
-                <p>🔹 Вы ввели: <strong>{text}</strong></p>
-
-                Отладка
-                <pre>DEBUG: {JSON.stringify({ text }, null, 2)}</pre>
-            </div>
-
-            <div>
-                <h1>Регистрация</h1>
-                <p>Введите адрес электронной почты</p>
-
-                <button>Подтвердить</button>
-                {contents}
-            </div>
+         
 
             <div>
                 <h1 id="tableLabel">Weather forecast</h1>
@@ -113,7 +79,7 @@ function App() {
             <div>
                 <h1>Строка с БД</h1>
                 <p>Это демонстрация соединения с БД</p>
-                {dbvalue}
+                {contentsDb.dbvalue}
             </div>
         </div>
     );

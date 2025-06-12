@@ -1,4 +1,4 @@
-﻿using DB;
+﻿using Db;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 
@@ -9,10 +9,14 @@ namespace ReactApp1.Server.Controllers
     public class DbController : ControllerBase
     {
         [HttpGet(Name = "GetDb")]
-        public async Task<string> GetDb()
+        public async Task<string> GetDb1()
         {
-            var gstr = new GetStr();
-            return await gstr.GetStr1("");
+            HttpContext.Session.SetString("MyKey", "Some value");
+            //return Ok("Session value set.");
+
+
+            var gstr = GetDb.GetPath();
+            return gstr;
         }
 
 
