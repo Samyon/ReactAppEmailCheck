@@ -30,9 +30,7 @@ function EmailInput({ onEmailChange }) {
             onEmailChange(email); // передаём значение вверх
 
             const payload = {
-                email:  email ,
-                ip_client: "12.34.45.78",
-                session: "30"
+                email:  email
             };
             console.log(payload);
 

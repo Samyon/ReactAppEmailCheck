@@ -13,15 +13,27 @@ namespace Db.Repository.TaskTbl
     public static class Querys
     {
 
-        public static async Task InsertTaskAsync(Db.Repository.TaskTbl.Dtos.EmailDto dto, string code)
+        public static async Task InsertTaskAsync(Db.Repository.TaskTbl.Dtos.TaskInsertDto dto)
         {
             string str = $@" 
                 INSERT INTO tasks
                 (created_at,          email,  status, change_status_at, code,       ip_client,   'session') VALUES
-                (CURRENT_TIMESTAMP, '{dto.Email}', 0,    CURRENT_TIMESTAMP, '{code}', '{dto.Ip_client}',   '{dto.Session}');
+                (CURRENT_TIMESTAMP, '{dto.Email}', 0,    CURRENT_TIMESTAMP, '{dto.Code}', '{dto.IpClient}',   '{dto.Session}');
                         ";
             await GetDb.ExecuteNonQueryAsync(str);
         }
+
+        public static async Task InsertTaskParamAsync(Db.Repository.TaskTbl.Dtos.TaskInsertDto dto)
+        {
+            string str = $@" 
+                INSERT INTO tasks
+                (created_at,          email,  status, change_status_at, code,       ip_client,   'session') VALUES
+                (CURRENT_TIMESTAMP, @Email, 0,    CURRENT_TIMESTAMP, @Code, @IpClient,   @Session);
+                        ";
+
+            await GetDb.ExecuteNonQueryParamAsync(str, dto);
+        }
+
 
         public static async Task DeleteTaskAsync(string where)
         {
@@ -30,6 +42,12 @@ namespace Db.Repository.TaskTbl
             await GetDb.ExecuteNonQueryAsync(str);
         }
 
+        public static async Task DeleteTaskParamAsync(string where, Dictionary<string, string> dictParam)
+        {
+            if (string.IsNullOrEmpty(where)) throw new ArgumentNullException(nameof(where));
+            string str = $@"DELETE FROM tasks WHERE {where};";
+            await GetDb.ExecuteNonQueryParamAsync(str, dictParam);
+        }
 
         public static async Task<List<TaskTbl.Entity>> GetTasksAsync(string where)
         {

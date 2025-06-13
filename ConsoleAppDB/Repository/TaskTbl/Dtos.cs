@@ -7,7 +7,8 @@ using System.Threading.Tasks;
 
 namespace Db.Repository.TaskTbl.Dtos
 {
-    public class EmailDto
+
+    public class TaskInsertDto
     {
         [Required]
         [EmailAddress]
@@ -15,11 +16,16 @@ namespace Db.Repository.TaskTbl.Dtos
         public string Email { get; set; }
 
         [MaxLength(150)]
-        public string Ip_client { get; set; }
+        public string IpClient { get; set; }
 
         [MaxLength(64)]
-        public string Session { get; set; } ;
+        public string Session { get; set; }
+        public string Code { get; set; }
     }
+
+
+
+
 
 
 
