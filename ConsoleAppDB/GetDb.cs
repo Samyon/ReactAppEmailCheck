@@ -1,4 +1,4 @@
-﻿using Db.Repository.TaskTbl.Dtos;
+﻿using Db.Repository.EmailTasks.Dtos;
 using Microsoft.Data.Sqlite;
 
 
@@ -6,35 +6,18 @@ namespace Db
 {
     public static class GetDb
     {
-        //private const string connectionString = "Data Source=bin\\Debug\\net9.0\\dbup.db";
-        private const string connectionString = "Data Source=dbup.db";
-        public static string GetPath()
+        private static object _locker = new object();    
+        private static string _connectionString = "Data Source=bin\\Debug\\net9.0\\dbup.db";
+        //private static string connectionString = "Data Source=dbup.db";
+        public static void ChangePath(string newConnectionString)
         {
-            //return Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location);
-
-            //string codeBase = Assembly.GetExecutingAssembly().CodeBase;
-            //UriBuilder uri = new UriBuilder(codeBase);
-            //string path = Uri.UnescapeDataString(uri.Path);
-            //return Path.GetDirectoryName(path);
-
-            // Get a Type object.
-            //Type t = typeof(GetStr);
-            // Instantiate an Assembly class to the assembly housing the Integer type.
-            //Assembly assem = Assembly.GetAssembly(t);
-
-            //return assem.Location;
-            return "test";
+            _connectionString = newConnectionString;
         }
 
-        /// <summary>
-        /// Warning! SQL Injection possible
-        /// </summary>
-        /// <param name="commandText"></param>
-        /// <returns></returns>
-        [Obsolete("Используйте ExecuteNonQueryParamAsync вместо ExecuteNonQueryAsync.")]
+        [Obsolete("Warning! SQL Injection possible. Use method with Param")]
         public static async Task ExecuteNonQueryAsync(string commandText)
         {
-            using var connection = new SqliteConnection(connectionString);
+            using var connection = new SqliteConnection(_connectionString);
             {
                 await connection.OpenAsync();
                 var insertCmd = connection.CreateCommand();
@@ -45,34 +28,31 @@ namespace Db
             //return "Ok";
         }
 
-        public static async Task ExecuteNonQueryParamAsync(string commandText, TaskInsertDto dto)
+        public static async Task ExecuteNonQueryParamAsync(string commandText, EmailTaskInsertDto dto)
         {
-            var dictParam = new Dictionary<string, string>();
+            using var connection = new SqliteConnection(_connectionString);
+            {
+                await connection.OpenAsync();
 
 
-            //using var connection = new SqliteConnection(connectionString);
-            //{
-            //    await connection.OpenAsync();
+                using (var command = new SqliteCommand(commandText, connection))
+                {
+                    command.Parameters.AddWithValue("@Email", dto.Email);
+                    command.Parameters.AddWithValue("@Code", dto.Code);
+                    command.Parameters.AddWithValue("@IpClient", dto.IpClient);
+                    command.Parameters.AddWithValue("@WebSession", dto.WebSession);
 
+                    await command.ExecuteNonQueryAsync();
+                }
 
-            //    using (var command = new SqliteCommand(commandText, connection))
-            //    {
-            //        command.Parameters.AddWithValue("@Email", dto.Email);
-            //        command.Parameters.AddWithValue("@Code", dto.Code);
-            //        command.Parameters.AddWithValue("@IpClient", dto.IpClient);
-            //        command.Parameters.AddWithValue("@Session", dto.Session);
-
-            //        await command.ExecuteNonQueryAsync();
-            //    }
-
-            //}
+            }
             //Console.WriteLine("Данные успешно добавлены в SQLite.");
             //return "Ok";
         }
 
         public static async Task ExecuteNonQueryParamAsync(string commandText, Dictionary<string, string> dictParam)
         {
-            using var connection = new SqliteConnection(connectionString);
+            using var connection = new SqliteConnection(_connectionString);
             {
                 await connection.OpenAsync();
                 using (var command = new SqliteCommand(commandText, connection))
@@ -85,18 +65,101 @@ namespace Db
                     await command.ExecuteNonQueryAsync();
                 }
             }
-            Console.WriteLine("Данные успешно добавлены в SQLite.");
-            //return "Ok";
         }
 
-        public static async Task<SqliteDataReader?> GetDataReaderAsync(string commandText)
+        public static async Task ExecuteNonQueryParamAsync(string commandText, Dictionary<string, object> dictParam)
         {
-            using (var connection = new SqliteConnection(connectionString))
+            using var connection = new SqliteConnection(_connectionString);
+            {
+                await connection.OpenAsync();
+                using (var command = new SqliteCommand(commandText, connection))
+                {
+                    foreach (var item in dictParam)
+                    {
+                        command.Parameters.AddWithValue($"@{item.Key}", item.Value);
+                    }
+
+                    await command.ExecuteNonQueryAsync();
+                }
+            }
+        }
+
+
+        //Можно использовать после закрытия соединения
+        public static async Task<List<Dictionary<string, object>>> GetRawQueryResultAsync(string query)
+        {
+            var result = new List<Dictionary<string, object>>();
+
+            using var connection = new SqliteConnection(_connectionString);
+            await connection.OpenAsync();
+
+            using var command = connection.CreateCommand();
+            command.CommandText = query;
+
+            using var reader = await command.ExecuteReaderAsync();
+
+            while (await reader.ReadAsync())
+            {
+                var row = new Dictionary<string, object>();
+
+                for (int i = 0; i < reader.FieldCount; i++)
+                {
+                    var name = reader.GetName(i);
+                    var value = reader.IsDBNull(i) ? null : reader.GetValue(i);
+                    row[name] = value!;
+                }
+
+                result.Add(row);
+            }
+
+            return result; // 
+        }
+
+        //Можно использовать после закрытия соединения
+        public static async Task<List<Dictionary<string, object>>> GetRawQueryResultAsync(string query, Dictionary<string, object> dictParam)
+        {
+            var result = new List<Dictionary<string, object>>();
+
+            using var connection = new SqliteConnection(_connectionString);
+            await connection.OpenAsync();
+
+            using var command = connection.CreateCommand();
+            command.CommandText = query;
+            foreach (var item in dictParam)
+            {
+                command.Parameters.AddWithValue($"@{item.Key}", item.Value);
+            }
+            using var reader = await command.ExecuteReaderAsync();
+
+            while (await reader.ReadAsync())
+            {
+                var row = new Dictionary<string, object>();
+
+                for (int i = 0; i < reader.FieldCount; i++)
+                {
+                    var name = reader.GetName(i);
+                    var value = reader.IsDBNull(i) ? null : reader.GetValue(i);
+                    row[name] = value!;
+                }
+
+                result.Add(row);
+            }
+
+            return result; // 
+        }
+
+
+        public static async Task GetDataReaderAsync(string commandText, Func<SqliteDataReader, Task> handleReaderAsync)
+        {
+            using (var connection = new SqliteConnection(_connectionString))
             {
                 await connection.OpenAsync();
                 var command = connection.CreateCommand();
                 command.CommandText = commandText;
-                return await command.ExecuteReaderAsync();                
+                using (var reader = await command.ExecuteReaderAsync())
+                {
+                    await handleReaderAsync(reader); // делегируем чтение вызывающему коду
+                }              
             }
         }
     }

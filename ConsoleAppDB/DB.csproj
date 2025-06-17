@@ -9,6 +9,7 @@
 
   <ItemGroup>
     <Folder Include="DbFile\" />
+    <Folder Include="Repository\ConfirmedEmails\" />
   </ItemGroup>
 
   <ItemGroup>

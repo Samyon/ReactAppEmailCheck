@@ -1,12 +1,12 @@
-CREATE TABLE settings
+
+
+--Это итоговая таблица проверенных Email
+CREATE TABLE confirmed_emails
 (
     id INTEGER PRIMARY KEY AUTOINCREMENT,
     created_at TEXT DEFAULT CURRENT_TIMESTAMP,--datetime
-    setting_key TEXT,
-    setting_value TEXT
+    email TEXT UNIQUE
 
 );
 
 
-
---индекс не нужен

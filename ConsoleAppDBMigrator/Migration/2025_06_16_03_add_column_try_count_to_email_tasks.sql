@@ -1,0 +1,1 @@
+ALTER TABLE email_tasks ADD COLUMN try_count INTEGER;

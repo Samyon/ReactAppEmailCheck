@@ -30,43 +30,43 @@ namespace TestProject
         public async Task IntegrtaedTestDbAsync()
         {
             await InsertTaskTblAsync();
-
+            await DeletePartialTaskTbl();
 
         }
 
         private async Task InsertTaskTblAsync()
         {
-            var tasks = await Db.Repository.TaskTbl.Querys.GetTasksAsync("");
+            var tasks = await Db.Repository.EmailTasks.Querys.GetTasksAsync("");
             Assert.True(tasks.Count == 0);
 
-            var insertDto = new Db.Repository.TaskTbl.Dtos.TaskInsertDto();
+            var insertDto = new Db.Repository.EmailTasks.Dtos.EmailTaskInsertDto();
 
             insertDto.Email = "testEmail1@mail.ru";
             insertDto.Code = "1234";
             insertDto.IpClient = "12.23.34.45";
-            insertDto.Session = "899db032-1256-0dd2-0a26-5e809b4a22bf";
-            await Db.Repository.TaskTbl.Querys.InsertTaskParamAsync(insertDto);
+            insertDto.WebSession = "899db032-1256-0dd2-0a26-5e809b4a22bf";
+            await Db.Repository.EmailTasks.Querys.InsertTaskParamAsync(insertDto);
 
             insertDto.Email = "testEmail2@mail.ru";
             insertDto.Code = "2345";
             insertDto.IpClient = "22.23.34.45";
-            insertDto.Session = "899db032-1256-0dd2-0a26-5e809b4a22bf";
-            await Db.Repository.TaskTbl.Querys.InsertTaskParamAsync(insertDto);
+            insertDto.WebSession = "899db032-1256-0dd2-0a26-5e809b4a22bf";
+            await Db.Repository.EmailTasks.Querys.InsertTaskParamAsync(insertDto);
 
             insertDto.Email = "testEmail3@mail.ru";
             insertDto.Code = "3456";
             insertDto.IpClient = "32.23.34.45";
-            insertDto.Session = "899db032-1256-0dd2-0a26-5e809b4a22bf";
-            await Db.Repository.TaskTbl.Querys.InsertTaskParamAsync(insertDto);
+            insertDto.WebSession = "899db032-1256-0dd2-0a26-5e809b4a22bf";
+            await Db.Repository.EmailTasks.Querys.InsertTaskParamAsync(insertDto);
 
             insertDto.Email = "testEmail4@mail.ru";
             insertDto.Code = "4567";
             insertDto.IpClient = "42.23.34.45";
-            insertDto.Session = "899db032-1256-0dd2-0a26-5e809b4a22bf";
-            await Db.Repository.TaskTbl.Querys.InsertTaskParamAsync(insertDto);
+            insertDto.WebSession = "899db032-1256-0dd2-0a26-5e809b4a22bf";
+            await Db.Repository.EmailTasks.Querys.InsertTaskParamAsync(insertDto);
 
 
-            tasks = await Db.Repository.TaskTbl.Querys.GetTasksAsync("");
+            tasks = await Db.Repository.EmailTasks.Querys.GetTasksAsync("");
             Assert.True(tasks.Count == 4);
 
             var result = true;
@@ -74,11 +74,11 @@ namespace TestProject
         }
 
         [Fact]
-        public async Task DeleteTaskTbl()
+        public async Task DeletePartialTaskTbl()
         {
-
-            var result = true;
-        Assert.True(result);
+            await Db.Repository.EmailTasks.Querys.DeleteTaskAsync("Code<3456");
+            var tasks = await Db.Repository.EmailTasks.Querys.GetTasksAsync("");
+            Assert.True(tasks.Count < 4);
         }
 
         public void Dispose()

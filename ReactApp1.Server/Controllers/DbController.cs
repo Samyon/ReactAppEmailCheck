@@ -15,7 +15,7 @@ namespace ReactApp1.Server.Controllers
             //return Ok("Session value set.");
 
 
-            var gstr = GetDb.GetPath();
+            var gstr = "It's OK";
             return gstr;
         }
 

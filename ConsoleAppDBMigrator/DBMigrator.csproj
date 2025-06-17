@@ -22,12 +22,25 @@
   </ItemGroup>
 
   <ItemGroup>
-    <None Update="TempScr\2025_06_10_00_CreateTabeSettings.sql">
+    <None Update="Migration\2025_06_14_00_CreateConfirmed_emails.sql">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
-    <None Update="TempScr\2025_06_10_01_SeedTabeSettings.sql">
+    <None Update="Migration\2025_06_16_01_alter_column_session-to-web_session_in_tasks.sql">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
+    <None Update="Migration\2025_06_14_01_IndexConfirmed_emails.sql">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Update="Migration\2025_06_16_02_alter_table_tasks_to_email_tasks.sql">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Update="Migration\2025_06_16_03_add_column_try_count_to_email_tasks.sql">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+  </ItemGroup>
+
+  <ItemGroup>
+    <Folder Include="TempScr\" />
   </ItemGroup>
 
 </Project>

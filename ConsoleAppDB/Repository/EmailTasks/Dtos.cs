@@ -5,10 +5,10 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Db.Repository.TaskTbl.Dtos
+namespace Db.Repository.EmailTasks.Dtos
 {
 
-    public class TaskInsertDto
+    public class EmailTaskInsertDto
     {
         [Required]
         [EmailAddress]
@@ -19,8 +19,9 @@ namespace Db.Repository.TaskTbl.Dtos
         public string IpClient { get; set; }
 
         [MaxLength(64)]
-        public string Session { get; set; }
+        public string WebSession { get; set; }
         public string Code { get; set; }
+        public long TryCount { get; set; }
     }
 
 
