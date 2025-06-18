@@ -1,10 +1,19 @@
 using ReactApp1.Server;
 using ReactApp1.Server.Middleware;
+using Serilog;
 public class Program
 {
     public static void Main(string[] args)
     {
+
+        Log.Logger = new LoggerConfiguration()
+           .WriteTo.File("logs/log.txt", rollingInterval: RollingInterval.Day)
+           .CreateLogger();
+
+
         var builder = WebApplication.CreateBuilder(args);
+
+        builder.Host.UseSerilog(); // заменить стандартный логгер
 
         builder.Services.Configure<Settings>(builder.Configuration.GetSection("Settings"));
 

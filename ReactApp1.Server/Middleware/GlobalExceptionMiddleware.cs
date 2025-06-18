@@ -30,6 +30,8 @@
                 };
 
                 await context.Response.WriteAsJsonAsync(response);
+
+                _logger.LogInformation("Перехват исключения в Middleware: "+ response, DateTime.UtcNow);
             }
         }
     }

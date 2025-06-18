@@ -14,7 +14,7 @@ namespace EmailSenderConsole
         public static async Task MakeAllAsync()
         {
             //Ищем записи с статусом 0 - самые свежие
-            string sqlStr = $@"SELECT id, status, change_status_at FROM email_tasks WHERE status=0 ORDER BY created_at DESC";
+            string sqlStr = $@"SELECT id, email, code, status, change_status_at FROM email_tasks WHERE status=0 ORDER BY created_at DESC";
 
             var values = await Db.GetDb.GetRawQueryResultAsync(sqlStr);
 
@@ -26,7 +26,7 @@ namespace EmailSenderConsole
                 value["status"] = 1;
                 value["change_status_at"] = Db.Helper.GetCurrentTimeForDB();
 
-                Console.WriteLine($"Для Email {value["email"]}   Код{value["code"]} ");
+                Console.WriteLine($"Для Email {value["email"]}   Код {value["code"]} ");
 
                 //Записываем данные в БД
                 string updateStr = $@" UPDATE email_tasks SET status=@status, change_status_at=@change_status_at

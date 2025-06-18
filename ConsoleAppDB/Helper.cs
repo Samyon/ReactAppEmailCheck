@@ -24,8 +24,6 @@ namespace Db
         {
             if (input == null) return string.Empty;
 
-            input = "PRAGMA journal_mode=WAL; " + input;
-
             // Удаляем переносы строк
             string cleaned = Regex.Replace(input, @"\r\n?|\n", " ");
 

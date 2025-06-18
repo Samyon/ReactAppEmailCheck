@@ -5,9 +5,8 @@ namespace Db
 {
     public static class GetDb
     {
-        private static object _locker = new object();
         private static string _connectionString = "Data Source=bin\\Debug\\net9.0\\dbup.db;Cache=Shared;Mode=ReadWriteCreate;Default Timeout=10;";
-        //private static string connectionString = "Data Source=dbup.db";
+
         public static void ChangePath(string newConnectionString)
         {
             _connectionString = newConnectionString;

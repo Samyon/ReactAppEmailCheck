@@ -23,16 +23,31 @@ namespace EmailSenderConsole
             Console.WriteLine($"Интервал задачи: {intervalSeconds} секунд");
 
             Console.WriteLine("Цикл запускается. Для выхода нажмите Ctrl+C.");
-            Db.GetDb.ChangePath("""Data Source=../../../../ReactApp1.Server\bin\Debug\net9.0\dbup.db""");
+
+            string pathToDb = config.GetValue<string>("TaskSettings:PathToDb") ?? "";
+            if (pathToDb=="")
+            {
+                Console.ForegroundColor = ConsoleColor.Red;
+                Console.WriteLine("Возникло исключение, т. к. невозможно прочитать TaskSettings:PathToDb из appsettings.json");
+                Console.ResetColor();
+                Console.ReadLine();
+                throw new Exception("Возникло исключение, т. к. невозможно прочитать TaskSettings:PathToDb из appsettings.json");
+            }
+
+            Db.GetDb.ChangePath(config.GetValue<string>("TaskSettings:PathToDb")!);
             while (true)
             {
+                intervalSeconds = config.GetValue<int>("TaskSettings:IntervalSeconds");
                 Console.WriteLine($"[{DateTime.Now}] Выполнение задачи");
                 try
                 {
                     await Logic.MakeAllAsync();
                 }
-                catch (Exception)
+                catch (Exception ex)
                 {
+                    Console.ForegroundColor = ConsoleColor.Red;
+                    Console.WriteLine("Возникло исключение, текущий набор команд прервался по причине: " + ex.Message + " Скоро будет запущен новый набор");
+                    Console.ResetColor();
                     //Logger
                 }
 

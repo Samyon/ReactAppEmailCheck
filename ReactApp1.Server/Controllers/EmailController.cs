@@ -1,6 +1,7 @@
 ﻿using Db;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Configuration;
+using Microsoft.Extensions.Logging;
 using System;
 using System.ComponentModel.DataAnnotations;
 using System.Diagnostics;
@@ -15,6 +16,7 @@ namespace ReactApp1.Server.Controllers
     {
         private static readonly Random _random = new();
         private readonly IConfiguration _configuration;
+        private readonly ILogger<EmailController> _logger;
 
         public class EmailDto
         {
@@ -24,7 +26,11 @@ namespace ReactApp1.Server.Controllers
             public string Email { get; set; }
         }
 
-
+        public EmailController(IConfiguration configuration, ILogger<EmailController> logger)
+        {
+            _configuration = configuration;
+            _logger = logger;
+        }
 
         private async Task<bool> IsSpamAsync(Dictionary<string, object> value)
         {
@@ -50,41 +56,36 @@ namespace ReactApp1.Server.Controllers
             return false;
         }
 
-        public EmailController(IConfiguration configuration)
-        {
-            _configuration = configuration;
-        }
+
 
         [HttpPost("recive_email")]
         public async Task<IActionResult> ReciveEmail([FromBody] EmailDto dto)
         {
-            var MaximumNumberOfActiveSessionsOnOneIP = _configuration["Settings:MaximumNumberOfActiveSessionsOnOneIP"];
-
-            var values = new List<Dictionary<string, object>>();
             var value = new Dictionary<string, object>();
-
-
-            var val = HttpContext.Session.GetString("MyKey");
-            //id, created_at, email, status, change_status_at, code, ip_client, web_session, try_count
+            var val = HttpContext.Session.GetString("MyKey");//activate session
             value.Add("email", dto.Email);
             value.Add("code", _random.Next(0, 10000).ToString());
             value.Add("ip_client", HttpContext.Connection.RemoteIpAddress?.ToString() ?? "");
             value.Add("web_session", HttpContext.Session.Id);
             value.Add("try_count", 0);
 
-            if (await IsSpamAsync(value)) return BadRequest(new
+            if (_configuration.GetValue<bool>("MySettings:UseAntiSpam") && await IsSpamAsync(value))
             {
-                error = "Spam detected",
-                details = "С хоста запрещено делать более 5 записей в минуту, более 10 записей в 10 минут 20 записей в течение 4 часов"
-            });
+                _logger.LogWarning("Spam detected", DateTime.UtcNow);
+                return BadRequest(new
+                {
+                    error = "Spam detected",
+                    details = "С хоста запрещено делать более 5 записей в минуту, более 10 записей в 10 минут 20 записей в течение 4 часов"
+                });
+            }
 
-            string sqlQuery = $@" 
-                INSERT INTO email_tasks
+
+            string sqlQuery = $@" INSERT INTO email_tasks
                 (email,  status, change_status_at, code,       ip_client,   web_session, try_count) VALUES
                 (@email, 0,    CURRENT_TIMESTAMP, @code, @ip_client,   @web_session, @try_count);     ";
 
             await GetDb.ExecuteNonQueryParamAsync(sqlQuery, value);
-
+            _logger.LogInformation("Email - {dto.Email} внесён в БД, ждём подтверждения", DateTime.UtcNow);
             return Ok(new { status = "save to db" });
         }
 
@@ -106,7 +107,7 @@ namespace ReactApp1.Server.Controllers
                                       ip_client=@ip_client AND 
                                       try_count<3 ORDER BY id DESC LIMIT 1;";
             var values = await Db.GetDb.GetRawQueryResultAsync(sqlStr, param);
-            if (values.Count==0) return BadRequest(new
+            if (values.Count == 0) return BadRequest(new
             {
                 error = "Error confirmation",
                 details = "В системе нет данных, что вы запрашивали подтверждение для какой-либо почты"
@@ -142,7 +143,7 @@ namespace ReactApp1.Server.Controllers
 
             sqlStr = $@" DELETE FROM email_tasks WHERE id=@id;";
             await Db.GetDb.ExecuteNonQueryParamAsync(sqlStr, param);
-
+            _logger.LogInformation($"Для Email - {{{values[0]["email"]}}}  код потверждён", DateTime.UtcNow);
             return Ok(new { status = "code confirm" });
         }
 

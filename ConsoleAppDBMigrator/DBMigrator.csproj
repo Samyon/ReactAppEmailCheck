@@ -37,6 +37,9 @@
     <None Update="Migration\2025_06_16_03_add_column_try_count_to_email_tasks.sql">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
+    <None Update="Migration\2025_06_18_01_journal_mode_wal.sql">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
   </ItemGroup>
 
   <ItemGroup>
