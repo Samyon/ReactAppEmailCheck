@@ -118,6 +118,9 @@ namespace Db
         //Можно использовать после закрытия соединения
         public static async Task<List<Dictionary<string, object>>> GetRawQueryResultAsync(string query, Dictionary<string, object> dictParam)
         {
+            query = Helper.CleanString(query);
+
+
             var result = new List<Dictionary<string, object>>();
 
             using var connection = new SqliteConnection(_connectionString);
@@ -129,6 +132,22 @@ namespace Db
             {
                 command.Parameters.AddWithValue($"@{item.Key}", item.Value);
             }
+
+            //======================
+
+            string debugSql = command.CommandText;
+            foreach (SqliteParameter param in command.Parameters)
+            {
+                debugSql = debugSql.Replace(param.ParameterName, $"'{param.Value}'");
+            }
+            Console.WriteLine(debugSql);
+
+
+
+
+
+            //===================
+
             using var reader = await command.ExecuteReaderAsync();
 
             while (await reader.ReadAsync())
@@ -139,7 +158,7 @@ namespace Db
                 {
                     var name = reader.GetName(i);
                     var value = reader.IsDBNull(i) ? null : reader.GetValue(i);
-                    row[name] = value!;
+                    row[name] = value ?? DBNull.Value;
                 }
 
                 result.Add(row);

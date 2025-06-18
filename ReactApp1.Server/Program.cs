@@ -1,4 +1,5 @@
 using ReactApp1.Server;
+using ReactApp1.Server.Middleware;
 public class Program
 {
     public static void Main(string[] args)
@@ -27,6 +28,7 @@ public class Program
 
         var app = builder.Build();
 
+        app.UseGlobalExceptionMiddleware(); //Отлавливаем исключения и превращаем в BadRequest
         app.UseSession();   // добавляем middleware для работы с сессиями
 
 

@@ -23,6 +23,10 @@ namespace ReactApp1.Server.Controllers
             public string Email { get; set; }
         }
 
+
+
+
+
         private readonly IConfiguration _configuration;
 
         public EmailController(IConfiguration configuration)
@@ -65,10 +69,59 @@ namespace ReactApp1.Server.Controllers
             return Ok(new { status = "save to db" });
         }
 
-        [HttpPost("check_code")]
-        public async Task<IActionResult> CheckCode([FromBody] EmailDto dto)
+        public class CodeDto
         {
+            //[Required]
+            //[EmailAddress]
+            //[MaxLength(100)]
+            public string Code { get; set; }
+        }
 
+        [HttpPost("check_code")]
+        public async Task<IActionResult> CheckCode([FromBody] CodeDto dto)
+        {
+            var param = new Dictionary<string, object>();
+            param.Add("ip_client", HttpContext.Connection.RemoteIpAddress?.ToString() ?? "");
+            param.Add("web_session", HttpContext.Session.Id);
+            string sqlStr = $@"SELECT id, code, try_count, email FROM email_tasks WHERE 
+                                      web_session=@web_session AND 
+                                      ip_client=@ip_client AND 
+                                      try_count<3 ORDER BY id DESC LIMIT 1;";
+            var values = await Db.GetDb.GetRawQueryResultAsync(sqlStr, param);
+
+
+
+            long try_count = (long)values[0]["try_count"];
+            try_count++;
+
+            param = new Dictionary<string, object>();
+            param.Add("try_count", try_count);
+            param.Add("id", values[0]["id"]);
+
+            sqlStr = $@" UPDATE email_tasks  SET try_count=@try_count WHERE id=@id;";
+            await Db.GetDb.ExecuteNonQueryParamAsync(sqlStr, param);
+
+            if (dto.Code != values[0]["code"].ToString()) return BadRequest(new
+            {
+                error = "Spam detected",
+                details = "С хоста запрещено делать более 5 записей в минуту, более 10 записей в 10 минут 20 записей в течение 4 часов"
+            });
+
+            //Вставляем подтверждённый email
+            param = new Dictionary<string, object>();
+            param.Add("email", values[0]["email"]);
+
+            sqlStr = $@" INSERT INTO confirmed_emails (email) VALUES(@email);";
+            await Db.GetDb.ExecuteNonQueryParamAsync(sqlStr, param);
+
+            //Удаляем подтверждённый email
+            param = new Dictionary<string, object>();
+            param.Add("id", values[0]["id"]);
+
+            sqlStr = $@" DELETE FROM email_tasks WHERE id=@id;";
+            await Db.GetDb.ExecuteNonQueryParamAsync(sqlStr, param);
+
+            return Ok(new { status = "code confirm" });
         }
 
         private async Task<bool> IsSpamAsync(Dictionary<string, object> value)
@@ -94,6 +147,7 @@ namespace ReactApp1.Server.Controllers
 
             return false;
         }
+
 
 
 

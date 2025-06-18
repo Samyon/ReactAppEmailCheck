@@ -1,8 +1,10 @@
 ﻿using Db.Repository.EmailTasks;
 using System;
 using System.Collections.Generic;
+using System.Data.Common;
 using System.Linq;
 using System.Text;
+using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 
 namespace Db
@@ -23,6 +25,40 @@ namespace Db
         {
             return DateTime.UtcNow.ToString("yyyy-MM-dd HH:mm:ss");
         }
+
+        public static string CleanString(string input)
+        {
+            if (input == null) return string.Empty;
+
+            // Удаляем переносы строк
+            string cleaned = Regex.Replace(input, @"\r\n?|\n", " ");
+
+            // Сжимаем все множественные пробелы в один
+            cleaned = Regex.Replace(cleaned, @"\s+", " ");
+
+            // Убираем пробелы по краям
+            return cleaned.Trim();
+        }
+
+        public static string GetDebugSql(DbCommand command)
+        {
+            string sql = command.CommandText;
+            foreach (DbParameter param in command.Parameters)
+            {
+                string value = param.Value switch
+                {
+                    null => "NULL",
+                    string s => $"'{s.Replace("'", "''")}'",
+                    DateTime dt => $"'{dt:yyyy-MM-dd HH:mm:ss}'",
+                    _ => param.Value.ToString()
+                };
+
+                sql = sql.Replace(param.ParameterName, value);
+            }
+
+            return sql;
+        }
+
 
     }
 }

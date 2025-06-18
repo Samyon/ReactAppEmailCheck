@@ -34,7 +34,7 @@ function EmailInput({ onEmailChange }) {
             };
             console.log(payload);
 
-            const response = await fetch('/api/email', {
+            const response = await fetch('/api/email/recive_email', {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json'

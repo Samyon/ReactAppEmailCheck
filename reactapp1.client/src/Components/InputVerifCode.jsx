@@ -13,12 +13,11 @@ function InputVerifCode() {
         const value = e.target.value;
         setCode(value);
 
-        // Простая валидация email
-        const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+         //Простая валидация code
         if (value === '') {
-            setError('');
-        } else if (!emailRegex.test(value)) {
-            setError('Неверный формат email');
+            setError('Ничего не ввели');
+        } else if (value.length > 10) {
+            setError('Слишком большой код');
         } else {
             setError('');
         }
@@ -26,12 +25,12 @@ function InputVerifCode() {
 
     const handleSubmit = async () => {
         try {
-            const response = await fetch('/api/email', {
+            const response = await fetch('/api/email/check_code', {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json'
                 },
-                body: JSON.stringify({ email })
+                body: JSON.stringify({ code })
             });
 
             if (!response.ok) {
@@ -40,10 +39,10 @@ function InputVerifCode() {
 
             const data = await response.json();
             console.log('Server response:', data);
-            alert(`${t('email')}: ${email}`);
+            alert(`${t('code')}: ${code}`);
         } catch (error) {
-            console.error('Error submitting email:', error);
-            alert('Failed to submit email');
+            console.error('Error submitting code:', error);
+            alert('Failed to submit code');
         }
     };
 
@@ -64,7 +63,7 @@ function InputVerifCode() {
                 {error ? (
                     <span style={{ color: 'red' }}>{error}</span>
                 ) : (
-                        code && <span>📧 Введённый код: {email}</span>
+                        code && <span>📧 Введённый код: {code}</span>
                 )}
             </div>
         </div>

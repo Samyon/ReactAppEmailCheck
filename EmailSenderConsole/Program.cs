@@ -23,7 +23,7 @@ namespace EmailSenderConsole
             Console.WriteLine($"Интервал задачи: {intervalSeconds} секунд");
 
             Console.WriteLine("Цикл запускается. Для выхода нажмите Ctrl+C.");
-            Db.GetDb.ChangePath("Data Source=../../../../ReactApp1.Server\\bin\\Debug\\net9.0\\dbup.db");
+            Db.GetDb.ChangePath("""Data Source=../../../../ReactApp1.Server\bin\Debug\net9.0\dbup.db""");
             while (true)
             {
                 Console.WriteLine($"[{DateTime.Now}] Выполнение задачи");
