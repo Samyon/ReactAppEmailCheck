@@ -1,11 +1,5 @@
-﻿using Db.Repository.EmailTasks;
-using System;
-using System.Collections.Generic;
-using System.Data.Common;
-using System.Linq;
-using System.Text;
+﻿using System.Data.Common;
 using System.Text.RegularExpressions;
-using System.Threading.Tasks;
 
 namespace Db
 {
@@ -29,6 +23,8 @@ namespace Db
         public static string CleanString(string input)
         {
             if (input == null) return string.Empty;
+
+            input = "PRAGMA journal_mode=WAL; " + input;
 
             // Удаляем переносы строк
             string cleaned = Regex.Replace(input, @"\r\n?|\n", " ");

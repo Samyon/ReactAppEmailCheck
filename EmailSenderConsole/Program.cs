@@ -27,7 +27,15 @@ namespace EmailSenderConsole
             while (true)
             {
                 Console.WriteLine($"[{DateTime.Now}] Выполнение задачи");
-                await Logic.MakeAllAsync();
+                try
+                {
+                    await Logic.MakeAllAsync();
+                }
+                catch (Exception)
+                {
+                    //Logger
+                }
+
                 await Task.Delay(TimeSpan.FromSeconds(intervalSeconds));
             }
         }

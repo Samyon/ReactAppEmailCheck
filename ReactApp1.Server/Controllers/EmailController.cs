@@ -14,20 +14,41 @@ namespace ReactApp1.Server.Controllers
     public class EmailController : ControllerBase
     {
         private static readonly Random _random = new();
+        private readonly IConfiguration _configuration;
 
         public class EmailDto
         {
-            //[Required]
-            //[EmailAddress]
-            //[MaxLength(100)]
+            [Required]
+            [EmailAddress]
+            [MaxLength(100)]
             public string Email { get; set; }
         }
 
 
 
+        private async Task<bool> IsSpamAsync(Dictionary<string, object> value)
+        {
+            //С хоста запрещено делать более 5 записей в минуту, более 10 записей в 10 минут 20 записей в течение 4 часов
+            var param = new Dictionary<string, object>
+            {
+                { "created_at", Db.Helper.TimeUntil(minuteToExpire: 1) },
+                { "ip_client", value["ip_client"] }
+            };
+            string selectStr = $@"SELECT email FROM email_tasks WHERE ip_client=@ip_client AND created_at<@created_at";
+            var values = await Db.GetDb.GetRawQueryResultAsync(selectStr, param);
+            if (values.Count > 4) return true;
 
 
-        private readonly IConfiguration _configuration;
+            param["created_at"] = Db.Helper.TimeUntil(minuteToExpire: 10);
+            values = await Db.GetDb.GetRawQueryResultAsync(selectStr, param);
+            if (values.Count > 9) return true;
+
+            param["created_at"] = Db.Helper.TimeUntil(hourToExpire: 4);
+            values = await Db.GetDb.GetRawQueryResultAsync(selectStr, param);
+            if (values.Count > 19) return true;
+
+            return false;
+        }
 
         public EmailController(IConfiguration configuration)
         {
@@ -60,9 +81,7 @@ namespace ReactApp1.Server.Controllers
             string sqlQuery = $@" 
                 INSERT INTO email_tasks
                 (email,  status, change_status_at, code,       ip_client,   web_session, try_count) VALUES
-                (@email, 0,    CURRENT_TIMESTAMP, @code, @ip_client,   @web_session, @try_count);
-                        ";
-
+                (@email, 0,    CURRENT_TIMESTAMP, @code, @ip_client,   @web_session, @try_count);     ";
 
             await GetDb.ExecuteNonQueryParamAsync(sqlQuery, value);
 
@@ -71,9 +90,8 @@ namespace ReactApp1.Server.Controllers
 
         public class CodeDto
         {
-            //[Required]
-            //[EmailAddress]
-            //[MaxLength(100)]
+            [Required]
+            [MaxLength(100)]
             public string Code { get; set; }
         }
 
@@ -88,7 +106,11 @@ namespace ReactApp1.Server.Controllers
                                       ip_client=@ip_client AND 
                                       try_count<3 ORDER BY id DESC LIMIT 1;";
             var values = await Db.GetDb.GetRawQueryResultAsync(sqlStr, param);
-
+            if (values.Count==0) return BadRequest(new
+            {
+                error = "Error confirmation",
+                details = "В системе нет данных, что вы запрашивали подтверждение для какой-либо почты"
+            });
 
 
             long try_count = (long)values[0]["try_count"];
@@ -124,29 +146,7 @@ namespace ReactApp1.Server.Controllers
             return Ok(new { status = "code confirm" });
         }
 
-        private async Task<bool> IsSpamAsync(Dictionary<string, object> value)
-        {
-            //С хоста запрещено делать более 5 записей в минуту, более 10 записей в 10 минут 20 записей в течение 4 часов
-            var param = new Dictionary<string, object>
-            {
-                { "created_at", Db.Helper.TimeUntil(minuteToExpire: 1) },
-                { "ip_client", value["ip_client"] }
-            };
-            string selectStr = $@"SELECT email FROM email_tasks WHERE ip_client='@ip_client' AND created_at<'@created_at'";
-            var values = await Db.GetDb.GetRawQueryResultAsync(selectStr, param);
-            if (values.Count > 4) return true;
 
-
-            param["created_at"] = Db.Helper.TimeUntil(minuteToExpire: 10);
-            values = await Db.GetDb.GetRawQueryResultAsync(selectStr, param);
-            if (values.Count > 9) return true;
-
-            param["created_at"] = Db.Helper.TimeUntil(hourToExpire: 4);
-            values = await Db.GetDb.GetRawQueryResultAsync(selectStr, param);
-            if (values.Count > 19) return true;
-
-            return false;
-        }
 
 
 

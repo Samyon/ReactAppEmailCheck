@@ -14,9 +14,9 @@ namespace EmailSenderConsole
         public static async Task MakeAllAsync()
         {
             //Ищем записи с статусом 0 - самые свежие
-            string selectStr = $@"SELECT id, status, change_status_at FROM email_tasks WHERE status=0 ORDER BY created_at DESC";
+            string sqlStr = $@"SELECT id, status, change_status_at FROM email_tasks WHERE status=0 ORDER BY created_at DESC";
 
-            var values = await Db.GetDb.GetRawQueryResultAsync(selectStr);
+            var values = await Db.GetDb.GetRawQueryResultAsync(sqlStr);
 
             //Организовываем по ним цикл
             //Каждой status присваиваем 1 и новое время присвоения
@@ -37,9 +37,9 @@ namespace EmailSenderConsole
 
 
             //Ищем записи с статусом 1 - которые в работе, и с вероятностью 0,1 присваиваем им код 2 - значит письмо дошло
-            selectStr = $@"SELECT id, status, change_status_at FROM email_tasks WHERE status=1 ORDER BY created_at DESC";
+            sqlStr = $@"SELECT id, status, change_status_at FROM email_tasks WHERE status=1 ORDER BY created_at DESC";
 
-            values = await Db.GetDb.GetRawQueryResultAsync(selectStr);
+            values = await Db.GetDb.GetRawQueryResultAsync(sqlStr);
             double chance = 0.1;
             //Организовываем по ним цикл
             foreach (var value in values)
@@ -57,7 +57,15 @@ namespace EmailSenderConsole
             }
 
             //Удаляем старые записи из таблицы за сутки
-            await Db.Repository.EmailTasks.Logic.DelTasksExpiredAsync(86400);
+            var param = new Dictionary<string, object>();
+            param.Add("created_at", Helper.TimeUntil(dayToExpire:1));
+
+            sqlStr = $@" DELETE FROM email_tasks WHERE created_at<@created_at;";
+            await Db.GetDb.ExecuteNonQueryParamAsync(sqlStr, param);
+
+
+
+
         }
 
 

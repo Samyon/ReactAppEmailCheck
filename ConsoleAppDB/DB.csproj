@@ -8,11 +8,6 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <Folder Include="DbFile\" />
-    <Folder Include="Repository\ConfirmedEmails\" />
-  </ItemGroup>
-
-  <ItemGroup>
     <PackageReference Include="dbup-sqlite" Version="6.0.1" />
     <PackageReference Include="Microsoft.Data.Sqlite" Version="9.0.5" />
     <PackageReference Include="Microsoft.Extensions.Configuration" Version="9.0.6" />
