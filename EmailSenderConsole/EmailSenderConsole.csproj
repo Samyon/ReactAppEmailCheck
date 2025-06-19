@@ -16,7 +16,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\ConsoleAppDB\DB.csproj" />
+    <ProjectReference Include="..\DBLib\DB.csproj" />
   </ItemGroup>
 
   <ItemGroup>

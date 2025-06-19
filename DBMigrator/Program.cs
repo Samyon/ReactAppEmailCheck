@@ -1,5 +1,4 @@
-﻿using ConsoleAppDBMigrator;
-using DbUp;
+﻿using DbUp;
 using DbUp.Engine;
 using Microsoft.Data.Sqlite;
 using System;

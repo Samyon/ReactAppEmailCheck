@@ -16,8 +16,8 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\ConsoleAppDBMigrator\DBMigrator.csproj" />
-    <ProjectReference Include="..\ConsoleAppDB\DB.csproj" />
+    <ProjectReference Include="..\DBMigrator\DBMigrator.csproj" />
+    <ProjectReference Include="..\DBLib\DB.csproj" />
     <ProjectReference Include="..\EmailSenderConsole\EmailSenderConsole.csproj" />
     <ProjectReference Include="..\ReactApp1.Server\ReactApp1.Server.csproj" />
   </ItemGroup>

@@ -9,7 +9,7 @@ using System.Reflection;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace ConsoleAppDBMigrator
+namespace DBMigrator
 {
     public class Migrate
     {
