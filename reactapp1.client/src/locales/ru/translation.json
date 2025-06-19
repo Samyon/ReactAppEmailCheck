@@ -3,6 +3,10 @@
   "email": "Электронная почта",
   "submit": "Отправить",
   "Enter email": "Введите e-mail",
-  "email address confirmation": "Подтверждение адреса электронной почты",
-  "Enter verification code": "Введите проверочный код"
+  "Enter verification code": "Введите проверочный код",
+  "Welcome to our website!": "Добро пожаловать на наш сайт!",
+  "We need to make sure that you have an email. To do this, you enter your email in the field below, click send, we will send you a confirmation code to this email, and you enter it in the code field that appears": "Нам нужно удостовериться, что у вас есть почта. Для этого вы введёте вашу почту в поле ниже, нажмёте отправить, мы вышлем вам код подтверждения на эту почту, и вы введёте его в появившееся поле для кода",
+  "Important: Do not refresh the page after sending the email and before entering the code": "Важно, не обновляйте страницу после посылки почты, и до ввода кода",
+  "Next": "Далее",
+  "Back": "Назад"
 }

@@ -4,6 +4,9 @@ import { AnimatePresence, motion } from 'framer-motion';
 import EmailInput from './EmailInput';
 import InputVerifCode from './InputVerifCode';
 
+import { useTranslation } from 'react-i18next';
+import '../i18n';
+
 //const [userEmail, setUserEmail] = useState('');//Проброс вверх от компонента
 
 
@@ -20,6 +23,7 @@ function MultiStepForm() {
 
     const steps = [<StepOne />, <StepTwo />, <StepThree />];
 
+    const { t, i18n } = useTranslation();
 
     //Проброс вверх от компонента
     const handleEmailChange = (value) => {
@@ -85,7 +89,7 @@ function MultiStepForm() {
                         animate="center"
                         exit="exit"
                         transition={{ duration: 0.4 }}
-                        //style={{ position: 'absolute', width: '100%' }}
+                    //style={{ position: 'absolute', width: '100%' }}
                     >
                         {steps[step]}
                     </motion.div>
@@ -94,10 +98,10 @@ function MultiStepForm() {
 
             <div style={{ marginTop: '1rem' }}>
                 <button onClick={prev} disabled={step === 0}>
-                    Назад
+                    {t('Back')}
                 </button>
                 <button onClick={next} disabled={step === steps.length - 1} style={{ marginLeft: '10px' }}>
-                    Далее
+                    {t('Next')}
                 </button>
             </div>
         </div>

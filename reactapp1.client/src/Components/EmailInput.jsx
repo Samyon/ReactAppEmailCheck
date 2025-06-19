@@ -24,6 +24,11 @@ function EmailInput({ onEmailChange }) {
         }
     };
 
+    const isValidEmail = (email) => {
+        // Простая валидация почты
+        return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email);
+    };
+
     const handleSubmit = async () =>  {
         try {
 
@@ -71,7 +76,7 @@ function EmailInput({ onEmailChange }) {
                 placeholder="example@email.com"
                 style={{ padding: '0.5rem', fontSize: '1rem' }}
             />
-            <button onClick={handleSubmit}>{t('submit')}</button>
+            <button disabled={!isValidEmail(email)} onClick={handleSubmit}>{t('submit')}</button>
             <div style={{ marginTop: '1rem' }}>
                 {error ? (
                     <span style={{ color: 'red' }}>{error}</span>
