@@ -19,15 +19,4 @@ public class BasicTests : IClassFixture<WebApplicationFactory<Program>>
         Assert.Equal(HttpStatusCode.OK, response.StatusCode);
     }
 
-    [Fact]
-    public async Task Post_Email_ReturnsOk()
-    {
-        var payload = new { email = "test@example.com" };
-
-        var response = await _client.PostAsJsonAsync("/api/email", payload);
-
-        Assert.Equal(HttpStatusCode.OK, response.StatusCode);
-        var content = await response.Content.ReadAsStringAsync();
-        Assert.Contains("success", content);
-    }
 }

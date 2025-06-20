@@ -81,7 +81,7 @@ function EmailInput({ onEmailChange }) {
                 {error ? (
                     <span style={{ color: 'red' }}>{error}</span>
                 ) : (
-                    email && <span>📧 Введённый email: {email}</span>
+                    email && <span>📧 {t('Введённый email')}: {email}</span>
                 )}
             </div>
         </div>
