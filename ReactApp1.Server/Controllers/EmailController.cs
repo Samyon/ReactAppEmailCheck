@@ -63,7 +63,7 @@ namespace ReactApp1.Server.Controllers
             var value = new Dictionary<string, object>();
             HttpContext.Session.SetString("MyKey", "MyKey2");
             var val = HttpContext.Session.GetString("MyKey");//activate session
-            value.Add("email", dto.Email);
+            value.Add("email", dto.Email!);
             value.Add("code", _random.Next(0, 10000).ToString());
             value.Add("ip_client", HttpContext.Connection.RemoteIpAddress?.ToString() ?? "");
             value.Add("web_session", HttpContext.Session.Id);
@@ -71,7 +71,7 @@ namespace ReactApp1.Server.Controllers
 
             if (_configuration.GetValue<bool>("MySettings:UseAntiSpam") && await IsSpamAsync(value))
             {
-                _logger.LogWarning("Spam detected", DateTime.UtcNow);
+                _logger.LogWarning("Spam detected at {Time}", DateTime.UtcNow);
                 return BadRequest(new
                 {
                     error = "Spam detected",
