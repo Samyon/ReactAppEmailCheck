@@ -23,7 +23,7 @@ namespace ReactApp1.Server.Controllers
             [Required]
             [EmailAddress]
             [MaxLength(100)]
-            public string Email { get; set; }
+            public string? Email { get; set; }
         }
 
         public EmailController(IConfiguration configuration, ILogger<EmailController> logger)
@@ -93,7 +93,7 @@ namespace ReactApp1.Server.Controllers
         {
             [Required]
             [MaxLength(100)]
-            public string Code { get; set; }
+            public string? Code { get; set; }
         }
 
         [HttpPost("check_code")]

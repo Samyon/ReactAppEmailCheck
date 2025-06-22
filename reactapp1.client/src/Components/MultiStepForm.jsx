@@ -39,17 +39,12 @@ function MultiStepForm() {
         console.log('Новый email:', value); // дополнительный код
         // например, сделать API-запрос или валидацию
         next();
-        test();
+        //test();
     };
 
     const test = () => {
         console.log('test');
-
     };
-
-
-
-
 
     const [step, setStep] = useState(0);
     const [direction, setDirection] = useState(0); // -1 ← назад, 1 → вперёд

@@ -1,8 +1,26 @@
-This file explains how Visual Studio created the project.
+Th# Changelog
 
-The following steps were used to generate this project:
-- Create new ASP\.NET Core Web API project.
-- Update project file to add a reference to the frontend project and set SPA properties.
-- Update `launchSettings.json` to register the SPA proxy as a startup assembly.
-- Add project to the startup projects list.
-- Write this file.
+All notable changes to this project will be documented in this file.
+
+## [1.0.0] - 2025-06-23
+### Added
+Сделать регистрацию пользователя по адресу эл. почты.
+
+    Клиент вводит адрес эл. почты, нажимает продолжить
+    Появляется поле, куда надо ввести код, который был сгенерирован системой и отправлен на введенную почту
+    Если код верный -- показать страницу что всё хорошо. Иначе -- выдать сообщение об ошибке.
+
+Технические требования
+Web-приложение
+
+    Реализация на ASP.NET ( ASP.NET Core)
+    Сгенерированное письмо уходит или в очередь сообщений (RabbitMQ) или в базу данных.
+
+Сервер отправки писем
+
+    Консольное приложение на .NET (.NET Core)
+    Слушает очередь (или периодически опрашивает базу данных) и получив задание для отправки -- выводит его в консоль (например, 2023.04.10 18:30 test@example.com код: 1234 )
+
+
+
+
