@@ -1,9 +1,9 @@
 Простейшее приложение на C# и React
 
-Видео по данному проекту:
-Миграции БД без ORM и с ORM, DbUp – лаконичные и простые миграции на C#.  https://www.youtube.com/watch?v=blVV8XxUd1o
-Простейшее приложение на C# и React - описание работы и запуска  https://www.youtube.com/watch?v=7X15x5myPCQ
-Entity Framework + CRUD + Repositoryможет лучше без них?    https://www.youtube.com/watch?v=J8wIusPxA60
+Видео по данному проекту:<br>
+Миграции БД без ORM и с ORM, DbUp – лаконичные и простые миграции на C#.  https://www.youtube.com/watch?v=blVV8XxUd1o <br>
+Простейшее приложение на C# и React - описание работы и запуска  https://www.youtube.com/watch?v=7X15x5myPCQ <br>
+Entity Framework + CRUD + Repositoryможет лучше без них?    https://www.youtube.com/watch?v=J8wIusPxA60 <br>
 
 
 
