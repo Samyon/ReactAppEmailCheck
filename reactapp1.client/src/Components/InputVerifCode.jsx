@@ -2,22 +2,23 @@
 import { useTranslation } from 'react-i18next';
 import '../i18n';
 
-function InputVerifCode() {
+function InputVerifCode({ onPrev }) {
     const [code, setCode] = useState('');
     const [error, setError] = useState('');
+    const [serverResp, setServerResp] = useState("");
+    const [serverRespDetails, setserverRespDetails] = useState("");
 
     const { t, i18n } = useTranslation();
-
 
     const handleChange = (e) => {
         const value = e.target.value;
         setCode(value);
 
-         //Простая валидация code
+        //Простая валидация code
         if (value === '') {
-            setError('Ничего не ввели');
+            setError(t('Ничего не ввели'));
         } else if (value.length > 10) {
-            setError('Слишком большой код');
+            setError(t('Слишком большой код'));
         } else {
             setError('');
         }
@@ -27,25 +28,34 @@ function InputVerifCode() {
         try {
             const response = await fetch('/api/email/check_code', {
                 method: 'POST',
+                credentials: 'include',
                 headers: {
                     'Content-Type': 'application/json'
                 },
                 body: JSON.stringify({ code })
             });
 
-            if (!response.ok) {
-                throw new Error('Network response was not ok');
-            }
 
             const data = await response.json();
             console.log('Server response:', data);
-            alert(`${t('code')}: ${code}`);
+
+            if (!response.ok) {
+                setServerResp(t(data.error));
+                setserverRespDetails(t(data.details));
+                throw new Error('Network response was not ok');
+            }
+            localStorage.setItem("email", ""); //очищаем email в хранилище
+            onPrev(false);
+
         } catch (error) {
             console.error('Error submitting code:', error);
-            alert('Failed to submit code');
+
         }
     };
 
+    const prev = () => {
+        onPrev(true);
+    };
 
     return (
         <div style={{ padding: '1rem', fontFamily: 'sans-serif' }}>
@@ -63,8 +73,17 @@ function InputVerifCode() {
                 {error ? (
                     <span style={{ color: 'red' }}>{error}</span>
                 ) : (
-                        code && <span>📧 Введённый код: {code}</span>
+                    code && <span>📧 {t('Введённый код')}: {code}</span>
                 )}
+            </div>
+
+            <p className="red-text">{serverResp}</p>
+            <p className="red-text">{serverRespDetails}</p>
+
+            <div style={{ marginTop: '1rem' }}>
+                <button onClick={prev} >
+                    {t('Back')}
+                </button>
             </div>
         </div>
     );

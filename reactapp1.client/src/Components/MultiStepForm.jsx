@@ -3,6 +3,7 @@ import { AnimatePresence, motion } from 'framer-motion';
 
 import EmailInput from './EmailInput';
 import InputVerifCode from './InputVerifCode';
+import CodeVerified from './CodeVerified';
 
 import { useTranslation } from 'react-i18next';
 import '../i18n';
@@ -18,12 +19,19 @@ function MultiStepForm() {
 
     // Компоненты шагов
     const StepOne = () => <div>    <EmailInput onEmailChange={handleEmailChange} /> </div>;
-    const StepTwo = () => <div><InputVerifCode /></div>;
-    const StepThree = () => <div>Шаг 3: Подтверждение</div>;
+    const StepTwo = () => <div><InputVerifCode onPrev={goPrev} /></div>;
+    const StepThree = () => <div><CodeVerified/></div>;
 
     const steps = [<StepOne />, <StepTwo />, <StepThree />];
 
     const { t, i18n } = useTranslation();
+
+    const goPrev = (value) => {
+        if (value == true)
+            prev();
+        else
+            next();
+    };
 
     //Проброс вверх от компонента
     const handleEmailChange = (value) => {
@@ -96,7 +104,7 @@ function MultiStepForm() {
                 </AnimatePresence>
             </div>
 
-            <div style={{ marginTop: '1rem' }}>
+            <div  style={{ marginTop: '1rem', display: 'none' }}>
                 <button onClick={prev} disabled={step === 0}>
                     {t('Back')}
                 </button>

@@ -3,7 +3,7 @@ import './App.css';
 import { useTranslation } from 'react-i18next';
 import './i18n';
 
-import MultiStepForm from './components/MultiStepForm';
+import MultiStepForm from './Components/MultiStepForm';
 
 
 function App() {
@@ -41,14 +41,11 @@ function App() {
                 <div>
                     {t('We need to make sure that you have an email. To do this, you enter your email in the field below, click send, we will send you a confirmation code to this email, and you enter it in the code field that appears')}
                 </div>
-                <div>
-                    {t('Important: Do not refresh the page after sending the email and before entering the code')}
-                </div>
             </div>
 
             <MultiStepForm />
 
-            
+
 
         </div>
     );

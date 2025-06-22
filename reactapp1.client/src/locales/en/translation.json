@@ -9,6 +9,18 @@
   "Important: Do not refresh the page after sending the email and before entering the code": "Important: Do not refresh the page after sending the email and before entering the code",
   "Next": "Next",
   "Back": "Back",
-  "Введённый email": "Entered email"
-
+  "Введённый email": "Entered email",
+  "Неверный формат email": "Invalid email format",
+  "Вы уже вводили E-mail:": "You have already entered E-mail:",
+  ", и на него уже был отправлен код подтверждения. Если вы введёте Email, и отправите его вновь, то на него снова будет отправлен новый код. если вы не хотите этого, просто нажмите кнопку ": ", and a confirmation code has already been sent to it. If you enter an Email and send it again, a new code will be sent to it again. If you don't want this, just click the button",
+  "Введённый код": "Entered code",
+  "Ничего не ввели": "Didn't enter anything",
+  "Слишком большой код": "The code is too big",
+  "Поздравляем, вы успешно подтвердили код для вашей почты!": "Congratulations, you have successfully verified the code for your email!",
+  "Error confirmation": "Error confirmation",
+  "В системе нет данных, что вы запрашивали подтверждение для какой-либо почты": "There is no data in the system that you requested confirmation for any mail.",
+  "Spam detected": "Spam detected",
+  "Вы ввели неправильный код более 3 раз, теперь вам придётся заново запросить код для этой почты": "You entered the wrong code more than 3 times, now you will have to request the code again for this email",
+  "Неверный код": "Invalid code",
+  "С хоста запрещено делать более 5 записей в минуту, более 10 записей в 10 минут 20 записей в течение 4 часов": "The host is prohibited from making more than 5 entries per minute, more than 10 entries in 10 minutes, 20 entries within 4 hours"
 }
